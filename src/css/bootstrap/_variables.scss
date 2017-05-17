@@ -314,14 +314,14 @@ $list-inline-padding: 5px !default;
 
 $table-cell-padding:            .75rem !default;
 $table-sm-cell-padding:         .3rem !default;
-
-$table-bg:                      transparent !default;
+$table-color:                   #D9E8FA;
+$table-bg:                      #FFFFFF !default;
 $table-bg-accent:               rgba($black,.05) !default;
-$table-bg-hover:                rgba($black,.075) !default;
+$table-bg-hover:                #D9E8FA !default;
 $table-bg-active:               $table-bg-hover !default;
 
 $table-border-width:            $border-width !default;
-$table-border-color:            $gray-lighter !default;
+$table-border-color:            #C9D2DC !default;
 
 $table-head-bg:                 $gray-lighter !default;
 $table-head-color:              $gray !default;

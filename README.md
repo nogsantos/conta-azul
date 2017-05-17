@@ -24,8 +24,8 @@ __*Campos obrigatórios__
 
 ## Expectativas:
 
-* Desenvolver aplicação com uma arquitetura Javascript que você acredite resolver o problema da melhor forma possível. De atenção ao * detalhes. Esse é o projeto que você colocaria em produção.
-* Você tem absolutamente total liberdade para utilização de frameworks, códigos abertos, plugins, bibliotecas, qualquer decisão que * quiser tomar.
+* Desenvolver aplicação com uma arquitetura Javascript que você acredite resolver o problema da melhor forma possível. De atenção ao detalhes. Esse é o projeto que você colocaria em produção.
+* Você tem absolutamente total liberdade para utilização de frameworks, códigos abertos, plugins, bibliotecas, qualquer decisão que quiser tomar.
 * Siga perfeitamente o layout determinado.
 
 
@@ -39,7 +39,7 @@ __*Campos obrigatórios__
         "marca" : "Volkswagem",
         "modelo" : "Gol",
         "placa" : "FFF-5498",
-        "valor” : "20000"
+        "valor" : "20000"
     },
     { 
         "combustivel" : "Gasolina",
@@ -47,7 +47,7 @@ __*Campos obrigatórios__
         "marca" : "Volkswagem",
         "modelo" : "Fox",            
         "placa" : "FOX-4125",
-        “valor” : “20000”
+        "valor" : "20000"
     },
     { 
         "combustivel" : "Alcool",
@@ -55,7 +55,7 @@ __*Campos obrigatórios__
         "marca" : "Volkswagen",
         "modelo" : "Fusca",
         "placa" : "PAI-4121",
-        “valor” : “20000”
+        "valor" : "20000"
     }
 ]
 ```
@@ -63,5 +63,3 @@ __*Campos obrigatórios__
 ## Layout
 
 [Acessar](https://invis.io/2H4MRFUKT)
-
-![](https://contaazul.invisionapp.com/share/2H4MRFUKT#/screens/109741373)

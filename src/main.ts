@@ -5,6 +5,7 @@ export function configure(aurelia: Aurelia) {
     aurelia.use
         .standardConfiguration()
         .feature('resources')
+        .plugin('aurelia-validation')
         .plugin('aurelia-bootstrap')
         .feature('resources');
 
