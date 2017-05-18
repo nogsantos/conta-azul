@@ -31,7 +31,7 @@ export class App {
             nav: false,
             auth: false
         }).map({
-            route: 'veiculo/editar/:id',
+            route: ['veiculo/editar/:id?'],
             name: 'VeiculosEditar',
             moduleId: 'v1/veiculos/formulario',
             nav: false,

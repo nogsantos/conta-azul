@@ -2,8 +2,29 @@
 //
 // Copy variables from `_variables.scss` to this file to override default values
 // without modifying source files.
+//
+// Font
+$body-color: #415C7B;
+// Paginacao
+$pagination-active-color: $body-color;
+$pagination-active-bg: #D9E8FA;
+$pagination-active-border-color :#91C6F4;
+// tabela
+$table-head-color :#46617E;
+$table-head-bg: #F8FAFC;
+.with-border {
+    border: 1px solid #C9D2DC !important;
+    -moz-border-radius: 5px !important;
+    -webkit-border-radius: 5px !important;
+    border-radius: 5px !important;
+}
+
 .w130 {
     width: 130px
+}
+
+.m10{
+    margin: 10px 0 10px 0;
 }
 
 .uptext {
@@ -24,4 +45,16 @@
         /* Internet Explorer 10+ */
         text-transform: none;
     }
+}
+
+.btn-cancel-row {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.btn-row {
+    background-color: #F1F4F9;
+    padding-top: 10px;
 }

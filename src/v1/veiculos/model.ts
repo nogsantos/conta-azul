@@ -25,46 +25,81 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     create(veiculo: Veiculo | any): Promise<any> {
-        return this.db.put(veiculo, function callback(err, result) {
-            if (err) {
-                return Promise.reject(err);
+        return this.db.put(veiculo, function callback(error, result) {
+            if (error) {
+                return Promise.reject(error);
             } else {
                 return Promise.resolve(result);
             }
         });
     }
     /**
-     * Atualiza um item
-     * 
-     * 
-     * @memberof VeiculosModel
-     */
-    update(id: Veiculo) {
-
-    }
-    /**
      * Exclui um item
      * 
-     * @param {number} id 
+     * @param {string} id 
      * 
      * @memberof VeiculosModel
      */
-    delete(id: number) {
-
+    delete(docId: string): Promise<any> {
+        return this.db.get(docId).then(doc => {
+            doc._deleted = true;
+            return this.db.put(doc);
+        }).catch(error => {
+            return Promise.reject(error);
+        });
     }
     /**
-     * Consulta um ou todos os itens
+     * Consulta todos os itens
      * 
-     * @param {number} [id] 
+     * @param {number} [skip] 
      * 
      * @memberof VeiculosModel
      */
-    fetch(id?: number): Promise<any> {
-        return Promise.resolve(
-            this.db.allDocs({ include_docs: true, descending: true }, (err, doc) => {
-                return doc.rows;
-            })
-        );
+    fetch(skip?: number): Promise<any> {
+        return this.db.allDocs(
+            {
+                include_docs: true,
+                descending: true,
+                limit: 5,
+                skip: skip ? skip : 0
+            }, (error, doc) => {
+                if (error) {
+                    return Promise.reject(error);
+                }
+                return Promise.resolve(doc.rows);
+            });
+    }
+    /**
+     * Consulta um item por id
+     * 
+     * @param {string} [docId] 
+     * 
+     * @memberof VeiculosModel
+     */
+    get(docId: string): Promise<any> {
+        return this.db.get(docId).then(item => {
+            return Promise.resolve(item);
+        }).catch(error => {
+            return Promise.reject(error);
+        });
+    }
+    /**
+     * Criar, atualizar, excluir multiplos documentos
+     * 
+     * Deletar o atributo "_deleted : true" deve estar presente no objeto.
+     * Atualizar o atributo "_id : id" deve estar presente no objeto.
+     * 
+     * @param {Array<any>} docs 
+     * @returns {Promise<any>} 
+     * 
+     * @memberof VeiculosModel
+     */
+    batch(docs: Array<any>): Promise<any> {
+        return this.db.bulkDocs(docs).then(result => {
+            return Promise.resolve(result);
+        }).catch(error => {
+            return Promise.reject(error);
+        });
     }
 
 }

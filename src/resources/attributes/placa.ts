@@ -1,22 +1,19 @@
-import { bindable, inject, noView, customAttribute } from 'aurelia-framework';
+import { autoinject, customAttribute,bindable } from 'aurelia-framework';
 import * as $ from 'jquery';
 import 'jquery.maskedinput';
 /**
  * Máscara para o telefone
  */
 @customAttribute('placa')
-@bindable('value')
-@noView()
-@inject(Element)
+@autoinject()
 export class PhoneFormat {
-    private element: Element; 
 
-    constructor(element) {
-        this.element = element;
-    }
+    constructor(
+        @bindable private element: Element
+    ) { }
 
-    attached() {
+    bind() {
         let self = this;
-        $(self.element).mask('aaa-9999');
+        $(self.element).mask('aaa-9999');        
     }
 }

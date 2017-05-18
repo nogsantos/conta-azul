@@ -1,24 +1,22 @@
 <template>
-    <div class="row no-gutters">
-        <div class="col-sm-12 col-md-6 col-lg-6 float-left">
-            <button type="button" class="btn btn-success" click.delegate="novo()">Novo carro</button>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 float-left m10">
+            <button type="button" class="btn btn-success" click.delegate="novo()">Novo carro</button>            
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="float-right">
-                <form class="form-inline">
-                    <label class="sr-only" for="inlineFormInputGroup">Pesquisar</label>
-                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                        <div class="input-group-addon">@</div>
-                        <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar">
-                    </div>
-                </form>
-            </div>
-        </div>
+        <div class="col-sm-12 col-md-6 col-lg-6 m10">    
+            <form class="form-inline float-right">
+                <label class="sr-only" for="inlineFormInputGroup">Pesquisar</label>
+                <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                    <div class="input-group-addon">@</div>
+                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar">
+                </div>
+            </form>            
+        </div>        
     </div>
     <div class="row no-gutters">
-        <div class="col">
-            <table class="table table-responsive table-hover">
-                <thead class="thead-inverse">
+        <div class="col">            
+            <table class="table table-responsive table-hover with-border">
+                <thead class="thead-default">
                     <tr>                        
                         <th><input class="form-check-input" type="checkbox"></th>
                         <th class="align-middle">Placa</th>
@@ -30,51 +28,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr repeat.for="veiculo of veiculos">
+                    <tr repeat.for="veiculo of veiculos" click.trigger="editar(veiculo.id)">
                         <td><input class="form-check-input" type="checkbox"></td>
                         <td class="align-middle">${veiculo.doc.placa}</td>
                         <td class="align-middle">${veiculo.doc.modelo}</td>
                         <td class="align-middle">${veiculo.doc.marca}</td>
                         <td class="align-middle">
                             <span if.bind="!veiculo.doc.imagem">Sem foto</span>
-                            <div if.bind="veiculo.doc.imagem" ref="customPopover">                                
+                            <div if.bind="veiculo.doc.imagem">
                                 <a if.bind="veiculo.doc.imagem" href.bind="veiculo.doc.imagem" 
-                                    aubs-popover="title:Imagem;
-                                                    body:<img src.bind='veiculo.doc.imagem'>;
-                                                    position.bind: 'auto';
-                                                    trigger.bind: 'mouseover';"
-                                    target="_blank">Imagem</a>
-                                    
+                                    aubs-popover="custom-popover.bind: imagemPopover;
+                                                        position.bind: 'auto';
+                                                        trigger.bind: 'mouseover';"
+                                    target="_blank">Imagem</a>                            
+                                <div ref="imagemPopover">
+                                    <h3 class="popover-title">${veiculo.doc.modelo}</h3>
+                                    <div class="popover-content">
+                                        <img src.bind="veiculo.doc.imagem" class='img-thumbnail'>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         <td class="align-middle">${veiculo.doc.combustivel}</td>
                         <td class="align-middle text-right">${veiculo.doc.valor}</td>
                     </tr>
                 </tbody>
-            </table>
+            </table>            
         </div>
     </div>
     <div class="row no-gutters">
-        <div class="col mx-auto">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+        <div class="col">
+            <div class="d-flex justify-content-center">
+                <aubs-pagination 
+                    page-size.bind="5" 
+                    pagination-size.bind="5"
+                    total-items.bind="total_items"
+                    current-page.bind="current_page">
+                </aubs-pagination>
+            </div>
         </div>
     </div>
 </template>

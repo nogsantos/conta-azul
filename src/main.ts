@@ -6,7 +6,13 @@ export function configure(aurelia: Aurelia) {
         .standardConfiguration()
         .feature('resources')
         .plugin('aurelia-validation')
-        .plugin('aurelia-bootstrap')
+        .plugin('aurelia-bootstrap', config => {
+            config.options.paginationBoundaryLinks = false;
+            config.options.paginationDirectionLinks = true;
+            config.options.paginationHideSinglePage = true;
+            config.options.paginationNextText = '&raquo;';
+            config.options.paginationPreviousText = '&laquo;';
+        })
         .feature('resources');
 
     if (environment.debug) {

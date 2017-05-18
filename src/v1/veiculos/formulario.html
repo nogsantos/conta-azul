@@ -1,84 +1,105 @@
 <template>
+    <div class="card">
+        <div class="card-block">
+            <h4 class="card-title">Formul&aacute;rio<small class="text-muted"> » Ve&iacute;culo » ${veiculo._id ? 'Edição' : 'Cadastro'}  ${veiculo._id ? ' » ' + veiculo._id : ''}</small></h4>
+            <div class="row">
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-8 col-md-8">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 col-md-4">
+                                    <div class="form-group has-danger">
+                                        <label for="_veiculo_placa">Placa*</label>
+                                        <input placa type="text" readonly.bind="veiculo._id" class="form-control uptext" id="_veiculo_placa" ref="_placa" value.bind="veiculo.placa & validate">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-8 col-md-8">
+                                    <div class="form-group">
+                                        <label for="_veiculo_marca">Marca*</label>
+                                        <input type="text" class="form-control" id="_veiculo_marca" value.bind="veiculo.marca & validate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="_veiculo_modelo">Modelo*</label>
+                                        <input type="text" class="form-control" id="_veiculo_modelo" value.bind="veiculo.modelo & validate">
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="_veiculo_combustivel">Combust&iacute;vel</label>
+                                        <select value.bind="veiculo.combustivel" id="_veiculo_combustivel" class="form-control">
+                                        <option model.bind="null">Selecione...</option>
+                                        <option repeat.for="combustivel of combustiveis" model.bind="combustivel">
+                                            ${combustivel}
+                                        </option>                                    
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-md-4">
+                                    <div class="form-group">
+                                        <label for="_veiculo_valor">Valor</label>
+                                        <input valor type="text" class="form-control text-right" id="_veiculo_valor" ref="_valor" value.bind="veiculo.valor">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-md-4">
+                            <div class="form-group">
+                                <label for="_veiculo_imagem">Imagem</label>
+                                <input type="text" class="form-control" id="_veiculo_imagem" value.bind="veiculo.imagem & validate & updateTrigger:'blur'" placeholder="http://">
+                                <img if.bind="veiculo.imagem" src.bind="veiculo.imagem" class="img-thumbnail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2 btn-row">
+                    <div if.bind="!veiculo._id" class="row m10">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button click.delegate="persistir()" class="btn btn-primary btn-block">Cadastrar</button>
+                        </div>
+                    </div>
+                    <div if.bind="veiculo._id" class="row m10">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button click.delegate="persistir(veiculo._id)" class="btn btn-primary btn-block">Editar</button>
+                        </div>
+                    </div>
+                    <div if.bind="veiculo._id" class="row m10">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button click.delegate="excluir(veiculo._id)" class="btn btn-warning btn-block">Excluir</button>
+                        </div>
+                    </div>
+                    <div if.bind="veiculo._id" class="row m10">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button click.delegate="novo()" class="btn btn-secondary btn-block">Novo</button>
+                        </div>
+                    </div>
+                    <div class="row btn-cancel-row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <button click.delegate="cancelar()" class="btn btn-link btn-block">Cancelar</button>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
     <div if.bind="retorno.mensagem" class="row">
         <div class="col">
             <div class="alert alert-${retorno.tipo}" role="alert">
                 <strong>${retorno.titulo}:</strong> ${retorno.mensagem}
             </div>
         </div>
-    </div>        
+    </div>
     <div if.bind="controller.errors.length > 0" class="row">
-        <div class="col">            
+        <div class="col">
             <div class="alert alert-danger" role="alert">
                 <ul>
                     <li repeat.for="error of controller.errors">
                         ${error.message}
                     </li>
                 </ul>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-8 col-lg-8">
-            <div class="row">
-                <div class="col-sm-12 col-md-8 col-md-8">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-4 col-md-4">
-                            <div class="form-group has-danger">                                
-                                <label for="_veiculo_placa">Placa*</label>
-                                <input placa type="text" class="form-control uptext" id="_veiculo_placa" ref="_placa & validate" value.bind="veiculo.placa & validate">                                
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-8 col-md-8">
-                            <div class="form-group">
-                                <label for="_veiculo_marca">Marca*</label>
-                                <input type="text" class="form-control" id="_veiculo_marca" value.bind="veiculo.marca & validate">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-4 col-md-4">
-                            <div class="form-group">
-                                <label for="_veiculo_modelo">Modelo*</label>
-                                <input type="text" class="form-control" id="_veiculo_modelo" value.bind="veiculo.modelo & validate">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4 col-md-4">
-                            <div class="form-group">
-                                <label for="_veiculo_combustivel">Combust&iacute;vel</label>
-                                <select value.bind="veiculo.combustivel" id="_veiculo_combustivel" class="form-control">
-                                    <option model.bind="null">Selecione...</option>
-                                    <option repeat.for="combustivel of combustiveis" model.bind="combustivel">
-                                        ${combustivel}
-                                    </option>                                    
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-4 col-md-4">
-                            <div class="form-group">
-                                <label for="_veiculo_valor">Valor</label>
-                                <input valor type="text" class="form-control" id="_veiculo_valor" ref="_valor" value.bind="veiculo.valor">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-4 col-md-4">
-                    <div class="form-group">
-                        <label for="_veiculo_imagem">Imagem</label>
-                        <input type="text" class="form-control" id="_veiculo_imagem" value.bind="veiculo.imagem" placeholder="http://">
-                    </div>                    
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4">
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <button click.delegate="cadastrar()" class="btn btn-primary">Cadastrar</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <button click.delegate="cancelar()" class="btn btn-link">Cancelar</button>
-                </div>
             </div>
         </div>
     </div>
