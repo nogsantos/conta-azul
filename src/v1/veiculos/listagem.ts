@@ -2,6 +2,7 @@ import { autoinject, bindable, bindingMode } from 'aurelia-framework';
 import { Router } from "aurelia-router";
 import { VeiculosModel } from "./model";
 import { Veiculo } from "./veiculo";
+import seed from "./seed";
 /**
  * Listagem de veículos
  * 
@@ -27,35 +28,35 @@ export class VeiculosListagem {
      */
     bind() {
         this.db.fetch().then(resolve => {
-            console.log(resolve);
-            this.veiculos = resolve.rows;
-        });
-    }
+            if (resolve.rows.length > 0) {
+                this.veiculos = resolve.rows;
+            } else {
+                this.seed();
+            }
+        });        
+    }    
     /**
      * Formulário para cadastro de um novo item
      * 
      * 
      * @memberof VeiculosListagem
      */
-    novo() {
-        // this.veiculo = new Veiculo();
-        // this.veiculo._id = new Date().toISOString();
-        // this.veiculo.combustivel = "Flex";
-        // this.veiculo.imagem = "null";
-        // this.veiculo.marca = "Volkswagem";
-        // this.veiculo.modelo = "Gol";
-        // this.veiculo.placa = "FFF-5498";
-        // this.veiculo.valor = 20000
-        // this.db.create(this.veiculo);
+    novo() {        
         this.subrouter.navigateToRoute('VeiculosCadastrar');
     }
-
-    add() {
-
-    }
-
-    show() {
-
+    /**
+     * Preenche o formulário com os valores iniciais
+     * 
+     * 
+     * @memberof VeiculosListagem
+     */
+    seed() {
+        seed.forEach(veiculo => {
+            this.db.create(veiculo);
+        });
+        this.db.fetch().then(resolve => {
+            this.veiculos = resolve.rows;
+        });
     }
 
 }

@@ -24,7 +24,7 @@
                         <th class="align-middle">Placa</th>
                         <th class="align-middle">Modelo</th>
                         <th class="align-middle">Marca</th>
-                        <th class="align-middle">Foto</th>
+                        <th class="align-middle">Imagem</th>
                         <th class="align-middle">Combust&iacute;vel</th>
                         <th class="align-middle text-right">Valor</th>
                     </tr>
@@ -35,7 +35,18 @@
                         <td class="align-middle">${veiculo.doc.placa}</td>
                         <td class="align-middle">${veiculo.doc.modelo}</td>
                         <td class="align-middle">${veiculo.doc.marca}</td>
-                        <td class="align-middle">${veiculo.doc.foto}</td>
+                        <td class="align-middle">
+                            <span if.bind="!veiculo.doc.imagem">Sem foto</span>
+                            <div if.bind="veiculo.doc.imagem" ref="customPopover">                                
+                                <a if.bind="veiculo.doc.imagem" href.bind="veiculo.doc.imagem" 
+                                    aubs-popover="title:Imagem;
+                                                    body:<img src.bind='veiculo.doc.imagem'>;
+                                                    position.bind: 'auto';
+                                                    trigger.bind: 'mouseover';"
+                                    target="_blank">Imagem</a>
+                                    
+                            </div>
+                        </td>
                         <td class="align-middle">${veiculo.doc.combustivel}</td>
                         <td class="align-middle text-right">${veiculo.doc.valor}</td>
                     </tr>

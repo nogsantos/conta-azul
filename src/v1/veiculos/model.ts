@@ -24,7 +24,7 @@ export class VeiculosModel {
      * 
      * @memberof VeiculosModel
      */
-    create(veiculo: Veiculo): Promise<any> {
+    create(veiculo: Veiculo | any): Promise<any> {
         return this.db.put(veiculo, function callback(err, result) {
             if (err) {
                 return Promise.reject(err);

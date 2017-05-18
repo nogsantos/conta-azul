@@ -5,8 +5,8 @@
                 <strong>${retorno.titulo}:</strong> ${retorno.mensagem}
             </div>
         </div>
-    </div>    
-    <div if.bind="controller.errors.size > 0" class="row">
+    </div>        
+    <div if.bind="controller.errors.length > 0" class="row">
         <div class="col">            
             <div class="alert alert-danger" role="alert">
                 <ul>
@@ -23,15 +23,15 @@
                 <div class="col-sm-12 col-md-8 col-md-8">
                     <div class="row">
                         <div class="col-sm-12 col-md-4 col-md-4">
-                            <div class="form-group">
+                            <div class="form-group has-danger">                                
                                 <label for="_veiculo_placa">Placa*</label>
-                                <input placa type="text" class="form-control uptext" ref="_placa" value.bind="veiculo.placa & validate">
+                                <input placa type="text" class="form-control uptext" id="_veiculo_placa" ref="_placa & validate" value.bind="veiculo.placa & validate">                                
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-8 col-md-8">
                             <div class="form-group">
                                 <label for="_veiculo_marca">Marca*</label>
-                                <input type="text" class="form-control" value.bind="veiculo.marca & validate">
+                                <input type="text" class="form-control" id="_veiculo_marca" value.bind="veiculo.marca & validate">
                             </div>
                         </div>
                     </div>
@@ -39,13 +39,13 @@
                         <div class="col-sm-12 col-md-4 col-md-4">
                             <div class="form-group">
                                 <label for="_veiculo_modelo">Modelo*</label>
-                                <input type="text" class="form-control" value.bind="veiculo.modelo & validate">
+                                <input type="text" class="form-control" id="_veiculo_modelo" value.bind="veiculo.modelo & validate">
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-4 col-md-4">
                             <div class="form-group">
                                 <label for="_veiculo_combustivel">Combust&iacute;vel</label>
-                                <select value.bind="veiculo.combustivel" class="form-control">
+                                <select value.bind="veiculo.combustivel" id="_veiculo_combustivel" class="form-control">
                                     <option model.bind="null">Selecione...</option>
                                     <option repeat.for="combustivel of combustiveis" model.bind="combustivel">
                                         ${combustivel}
@@ -56,17 +56,16 @@
                         <div class="col-sm-12 col-md-4 col-md-4">
                             <div class="form-group">
                                 <label for="_veiculo_valor">Valor</label>
-                                <input valor type="text" class="form-control" ref="_valor" value.bind="veiculo.valor">
+                                <input valor type="text" class="form-control" id="_veiculo_valor" ref="_valor" value.bind="veiculo.valor">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-4 col-md-4">
-                    <fieldset>
-                        <legend>Imagem</legend>
-                        <input type="file" class="form-control-file" aria-describedby="fileHelp">
-                        <small id="fileHelp" class="form-text text-muted">Imagem.</small>
-                    </fieldset>
+                    <div class="form-group">
+                        <label for="_veiculo_imagem">Imagem</label>
+                        <input type="text" class="form-control" id="_veiculo_imagem" value.bind="veiculo.imagem" placeholder="http://">
+                    </div>                    
                 </div>
             </div>
         </div>
