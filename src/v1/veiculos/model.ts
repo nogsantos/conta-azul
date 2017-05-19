@@ -25,13 +25,18 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     create(veiculo: Veiculo | any): Promise<any> {
-        return this.db.put(veiculo, function callback(error, result) {
-            if (error) {
-                return Promise.reject(error);
-            } else {
-                return Promise.resolve(result);
-            }
-        });
+        try {            
+            return this.db.put(veiculo, function callback(error, result) {
+                if (error) {
+                    return Promise.reject(error);
+                } else {
+                    return Promise.resolve(result);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
     }
     /**
      * Exclui um item

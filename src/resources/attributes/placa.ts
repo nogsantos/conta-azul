@@ -1,4 +1,4 @@
-import { autoinject, customAttribute,bindable } from 'aurelia-framework';
+import { autoinject, customAttribute, bindable } from 'aurelia-framework';
 import * as $ from 'jquery';
 import 'jquery.maskedinput';
 /**

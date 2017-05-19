@@ -1,26 +1,50 @@
-import { VeiculosModel } from '../../src/v1/veiculos/model';
-import { Container } from "aurelia-framework";
+import { Container } from 'aurelia-dependency-injection';
+import { BindingLanguage } from 'aurelia-templating';
+import { TemplatingBindingLanguage } from 'aurelia-templating-binding';
 import { VeiculosFormulario } from '../../src/v1/veiculos/formulario';
+import { Veiculo } from "../../src/v1/veiculos/veiculo";
+import { VeiculosModel } from "../../src/v1/veiculos/model";
+import { Router } from "aurelia-router";
 
-describe('Formulário veículo', () => {
-    // let container: Container = new Container();
-    // let formulario: VeiculosFormulario;
-    // container.registerInstance(VeiculosFormulario, formulario);
+describe('Formulário veículo', function () {
+    let container: Container;
+    let formulario: VeiculosFormulario | any;
+    let veiculo: Veiculo;
+    let db: VeiculosModel;
+    let subrouter: Router
 
-    // let demoClass: VeiculosFormulario = container.get(VeiculosFormulario);
+    beforeEach(() => {
+        container = new Container().makeGlobal();
+        container.registerInstance(BindingLanguage, container.get(TemplatingBindingLanguage));
+        subrouter = container.get(Router);
 
-    // beforeEach(() => {
-    //     spyOn(formulario, "paramsInitialize").and.callFake(() => {
-    //         return new Promise((resolve, reject) => {
-    //             resolve("some_fake_response");
-    //         });
-    //     });
-    // });
+        veiculo = new Veiculo();
+        db = new VeiculosModel();
+        formulario = new VeiculosFormulario(db, subrouter);
 
-    // it("returns the fake response", done => {
-    //     demoClass.excluir(1).then((response) => {
-    //         expect(response).toBe("some_fake_response");
-    //         done();
-    //     });
-    // });
+        formulario.erros = [];
+        formulario.veiculo = veiculo;
+    });
+
+    it("os campos obrigatorios são validados", () => {
+        veiculo.marca = "Chevrolet";
+        veiculo.modelo = "Celta";
+        veiculo.placa = "ABC-1234";
+        expect(formulario.validar()).toBe(true);
+    });
+
+    it("os campos obrigatorios são validados quando não informados", () => {
+        veiculo.marca = null;
+        veiculo.modelo = null;
+        veiculo.placa = null;
+        expect(formulario.validar()).toBe(false);
+    });
+
+    it("o endeço da imagem possui uma url em um formato válido", () => {
+        veiculo.imagem = "https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+        expect(formulario.validarUrlImagem()).toBe(true);
+        veiculo.imagem = "alguma url";
+        expect(formulario.validarUrlImagem()).toBe(false);
+    });
+
 });

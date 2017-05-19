@@ -1,22 +1,19 @@
-import { bindable, inject, noView, customAttribute } from 'aurelia-framework';
+import { autoinject, customAttribute, bindable } from 'aurelia-framework';
 import * as $ from 'jquery';
 import 'jquery-maskmoney';
 /**
  * Máscara para o valores monetários R$
  */
 @customAttribute('valor')
-@bindable('value')
-@noView()
-@inject(Element)
+@autoinject()
 export class CurrencyFormat {
-    private element: Element; 
 
-    constructor(element) {
-        this.element = element;
-    }
+    constructor(
+        @bindable private element: Element
+    ) { }
 
     attached() {
-        let self = this;        
+        let self = this;
         $(self.element).maskMoney({
             symbol: 'R$ ',
             showSymbol: true,
