@@ -44,16 +44,22 @@
     "jasmine-core": "^2.4.1",
     "jquery-maskmoney": "^3.0.2",
     "jquery.maskedinput": "^1.4.1",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-jasmine": "^1.0.2",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "2.1.1",
+    "karma-coverage-istanbul-reporter": "1.2.1",
+    "karma-jasmine": "1.1.0",
+    "karma-mocha-reporter": "2.2.3",
+    "karma-phantomjs-launcher": "^1.0.4",
     "karma-typescript-preprocessor": "^0.2.1",
+    "karma-webpack": "^2.0.3",
     "minimatch": "^3.0.2",
     "pouchdb": "^6.2.0",
     "through2": "^2.0.1",
     "tslint": "^3.11.0",
     "typescript": ">=1.9.0-dev || ^2.0.0",
     "uglify-js": "^2.6.3",
-    "vinyl-fs": "^2.4.3"
+    "vinyl-fs": "^2.4.3",
+    "webpack": "^2.5.1",
+    "webpack-dev-middleware": "^1.10.2"
   }
 }

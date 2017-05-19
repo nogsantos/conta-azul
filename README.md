@@ -1,5 +1,7 @@
 # Desafio Front-End Conta Azul
 
+[![Build Status](https://travis-ci.org/nogsantos/conta-azul.svg?branch=master)](https://travis-ci.org/nogsantos/conta-azul)
+
 **Objetivo:** ​Desenvolver mini aplicação para controle de frotas.
 
 **Descrição:** ​O objetivo desse desafio é entender como você pensa e resolve problemas do dia a dia. Para isso o desafio é desenvolver uma aplicação frontend (Não há necessidade de escrever a parte backend) conforme os requisitos abaixo:
