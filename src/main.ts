@@ -4,8 +4,7 @@ import environment from './environment';
 export function configure(aurelia: Aurelia) {
     aurelia.use
         .standardConfiguration()
-        .feature('resources')
-        .plugin('aurelia-validation')
+        .feature('resources')    
         .plugin('aurelia-bootstrap', config => {
             config.options.paginationBoundaryLinks = false;
             config.options.paginationDirectionLinks = true;

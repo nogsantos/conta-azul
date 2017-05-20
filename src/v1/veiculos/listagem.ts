@@ -30,7 +30,8 @@ export class VeiculosListagem {
     /*     
      * Check
      */
-    toggle_check;
+    @bindable toggle_check;
+    @bindable private master_is_checked: boolean;
     @bindable select_exclusao: string[] = [];
     /**
      * CDI
@@ -60,6 +61,7 @@ export class VeiculosListagem {
         /*
          * Habilita o check
          */
+        this.master_is_checked = false;
         this.checkToggle();
     }
     /**
@@ -69,18 +71,15 @@ export class VeiculosListagem {
      * @memberof VeiculosListagem
      */
     checkToggle() {
-        $(this.toggle_check).click(event => {
-            event.stopPropagation();
-            $(':checkbox.checkitem').prop('checked', (posicao, valor) => {
-                if (!this.toggle_check.checked) {
-                    $(':checkbox.checkitem').prop('checked', false);
-                    this.popItens();
-                    return;
-                }
-                $(':checkbox.checkitem').prop('checked', true);
+        $(this.toggle_check).on('click', () => {
+            if (this.master_is_checked) {
+                this.master_is_checked = false;
+                $(':checkbox.checkitem').prop('checked', false);
+                this.popItens();
                 return;
-            });
-            return;
+            }
+            this.master_is_checked = true;
+            $(':checkbox.checkitem').prop('checked', true);
         })​;
     }
     /**
@@ -138,7 +137,8 @@ export class VeiculosListagem {
      * @memberof VeiculosListagem
      */
     current_pageChanged(newVal, oldVal) {
-        this.toggle_check.checked = false;
+        this.master_is_checked = false;
+        this.checkToggle();
         let offset: number = 0;
         offset = ((newVal * 5) - 5);
         this.db.fetch(offset).then(response => {
@@ -150,31 +150,33 @@ export class VeiculosListagem {
         });
     }
     /**
-     * Eclusão dos itens selecionados
+     * Exclusão dos itens selecionados
      * 
      * 
      * @memberof VeiculosListagem
      */
     excluir() {
-        if (this.toggle_check.checked) {
-            $(':checkbox.checkitem').prop('defaultValue', (pos, val) => {
-                this.select_exclusao.push(val)
-            });
-        }
+        $(':checkbox.checkitem').prop('checked', (posicao, is_checked) => {
+            if (is_checked) {
+                $(':checkbox.checkitem').prop('defaultValue', (pos, val) => {
+                    if (posicao === pos) {
+                        this.select_exclusao.push(val);
+                    }
+                });
+            }
+        });
         let para_exclusao = [];
         this.select_exclusao.forEach(val => {
-            // this.db.delete(val)
-            para_exclusao.push(val);
-            // console.log(val);
+            para_exclusao.push(JSON.parse(val));
         })
-        console.log(para_exclusao);
-        // this.db.batch(para_exclusao).then(result => {
-        //     this.db.fetch().then(resolve => {
-        //         this.veiculos = resolve.rows;
-        //     });
-        //     console.log(result);
-        // }).catch(error => {
-        //     console.log(error);
-        // });
+        this.db.batch(para_exclusao).then(result => {
+            this.db.fetch().then(response => {
+                this.master_is_checked = false;
+                this.total_items = response.total_rows;
+                this.veiculos = response.rows;                
+            });
+        }).catch(error => {
+            console.log(error);
+        });
     }
 }

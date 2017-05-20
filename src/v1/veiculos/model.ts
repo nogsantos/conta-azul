@@ -25,16 +25,16 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     create(veiculo: Veiculo | any): Promise<any> {
-        try {            
-            return this.db.put(veiculo, function callback(error, result) {
+        try {
+            let promise = this.db.put(veiculo, (error, result) => {
                 if (error) {
-                    return Promise.reject(error);
-                } else {
-                    return Promise.resolve(result);
+                    Promise.reject(error);
+                    return;
                 }
+                Promise.resolve(result);
             });
+            return promise;
         } catch (error) {
-            console.log(error);
             return Promise.reject(error);
         }
     }
@@ -46,12 +46,21 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     delete(docId: string): Promise<any> {
-        return this.db.get(docId).then(doc => {
-            doc._deleted = true;
-            return this.db.put(doc);
-        }).catch(error => {
+        try {
+            return this.db.get(docId, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                this.db.remove(result._id, result._rev, (error, result) => {
+                    if (error) {
+                        Promise.reject(error);
+                    }
+                    Promise.resolve(result);
+                });
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
     /**
      * Consulta todos os itens
@@ -61,18 +70,21 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     fetch(skip?: number): Promise<any> {
-        return this.db.allDocs(
-            {
+        try {
+            return this.db.allDocs({
                 include_docs: true,
                 descending: true,
                 limit: 5,
                 skip: skip ? skip : 0
-            }, (error, doc) => {
+            }, (error, result) => {
                 if (error) {
-                    return Promise.reject(error);
+                    Promise.reject(error);
                 }
-                return Promise.resolve(doc.rows);
+                Promise.resolve(result.rows);
             });
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
     /**
      * Consulta um item por id
@@ -82,11 +94,16 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     get(docId: string): Promise<any> {
-        return this.db.get(docId).then(item => {
-            return Promise.resolve(item);
-        }).catch(error => {
+        try {
+            return this.db.get(docId, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                Promise.resolve(result);
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
     /**
      * Criar, atualizar, excluir multiplos documentos
@@ -100,11 +117,15 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     batch(docs: Array<any>): Promise<any> {
-        return this.db.bulkDocs(docs).then(result => {
-            return Promise.resolve(result);
-        }).catch(error => {
+        try {
+            return this.db.bulkDocs(docs, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                Promise.resolve(result);
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
-
 }

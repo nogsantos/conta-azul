@@ -127,21 +127,17 @@
                         "resources": [
                             "**/*.html"
                         ]
-                    },
-                    {
-                        "name": "jquery.maskedinput",
-                        "path": "../node_modules/jquery.maskedinput/src",
-                        "main": "jquery.maskedinput"
-                    },
+                    },                    
                     {
                         "name": "jquery-maskmoney",
                         "path": "../node_modules/jquery-maskmoney/src",
                         "main": "jquery.maskMoney"
                     },
                     {
-                        "name": "aurelia-validation",
-                        "path": "../node_modules/aurelia-validation/dist/amd",
-                        "main": "aurelia-validation"
+                        "name": "aurelia-mask",
+                        "path": "../node_modules/aurelia-mask/dist",
+                        "main": "masked-input",
+                        "resources": []
                     },
                     {
                         "name": "aurelia-templating-resources",

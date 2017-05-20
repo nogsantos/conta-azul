@@ -25,7 +25,7 @@
                     <tr>                        
                         <th>                            
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" ref="toggle_check" class="custom-control-input">
+                                <input type="checkbox" ref="toggle_check" checked.bind="master_is_checked" class="custom-control-input">
                                 <span class="custom-control-indicator"></span>                                
                             </label>
                         </th>
@@ -41,7 +41,7 @@
                     <tr repeat.for="veiculo of veiculos" dblclick.trigger="editar(veiculo.id)">
                         <td>
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" value.bind="'{'+'_id:'+veiculo.doc._id+', _rev:'+veiculo.doc._rev+'}'" checked.two-way="select_exclusao" class="custom-control-input checkitem">
+                                <input type="checkbox" value='{"_id":"${veiculo.doc._id}","_rev":"${veiculo.doc._rev}","_deleted":true}' checked.bind="select_exclusao" class="custom-control-input checkitem">                                
                                 <span class="custom-control-indicator"></span>                                
                             </label>
                         </td>
@@ -68,7 +68,10 @@
                         <td class="align-middle text-right">${veiculo.doc.valor}</td>
                     </tr>
                 </tbody>
-            </table>            
+            </table>
+            <div if.bind="veiculos.length === 0" class="d-flex justify-content-center">
+                <h6>Todos os itens foram excluídos, atualize a página com a listagem vazia para gerar a carga inicial de dados.</h6>
+            </div>
         </div>
     </div>
     <!--paginação-->

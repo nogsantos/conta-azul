@@ -11,8 +11,7 @@ import { Veiculo } from "./veiculo";
 @autoinject()
 export class VeiculosFormulario {
     @bindable veiculo: Veiculo;
-    @bindable erros: Array<string>;
-    private _placa;
+    @bindable erros: Array<string>;    
     private _valor;
     private is_valid: boolean;
     private retorno: Object | any;
@@ -56,7 +55,8 @@ export class VeiculosFormulario {
             mensagem: null,
             titulo: null,
             tipo: null
-        };
+        };        
+        this.limparMensagem();
     }
     /**
      * Persistir o item
@@ -66,12 +66,12 @@ export class VeiculosFormulario {
      */
     persistir() {
         if (this.validar()) {
-            let placa = this._placa.value.toUpperCase();
-            this.veiculo._id = placa
-            this.veiculo.placa = placa;
+            this.limparMensagem();            
+            this.veiculo._id = this.veiculo.placa = this.veiculo.placa.toUpperCase();
             this.veiculo.valor = this._valor.value;
-            this.db.create(this.veiculo).then(result => {
-                this.veiculo._id = result.id;
+            this.db.create(this.veiculo).then(response => {
+                this.veiculo._id = response.id;
+                this.veiculo._rev = response.rev;
                 this.mensagemSucesso("persistido");
             }).catch(error => {
                 switch (error.status) {
@@ -79,7 +79,7 @@ export class VeiculosFormulario {
                         this.erroVeiculoJaCadastrado();
                         break;
                     default:
-                        this.mensagemErro(error)
+                        this.mensagemErro(error.status)
                         break;
                 }
             });
@@ -95,10 +95,7 @@ export class VeiculosFormulario {
         this.retorno.mensagem = `Veículo placa ${this.veiculo.placa} já cadastrado`;
         this.retorno.tipo = "warning";
         this.retorno.titulo = "Alerta";
-
-        this.veiculo._id = null;
-        this.veiculo.placa = null;
-        this._placa.value = null;
+        this.veiculo = new Veiculo();
     }
     /**
      * Define a mensagem de sucesso
@@ -108,7 +105,7 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     mensagemSucesso(acao: string) {
-        this.retorno.mensagem = `Item ${acao}`;
+        this.retorno.mensagem = `Veículo ${acao}`;
         this.retorno.titulo = "Sucesso";
         this.retorno.tipo = "success";
     }
@@ -149,9 +146,9 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     excluir(placa) {
-        this.db.delete(placa).then(success => {
-            this.mensagemSucesso('excluido');
-            this.novo();
+        this.db.delete(placa).then(response => {
+            this.mensagemSucesso(`${response.placa} excluído`);
+            this.veiculo = new Veiculo();
         }).catch(error => {
             this.mensagemErro(error.status === 404 ? "Veículo não localizado" : "Erro desconhecido")
         });
@@ -164,6 +161,7 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     validar(): boolean {
+        this.limparMensagem();
         this.erros = [];
         let mensagem = "é um campo obrigatório";
         if (!this.veiculo.placa) {
@@ -191,5 +189,19 @@ export class VeiculosFormulario {
      */
     validarUrlImagem(): boolean {
         return /^https?:\/\/.{3,}$/.test(this.veiculo.imagem);
+    }
+    /**
+     * Limpa as mensagens de erro caso existam
+     * 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    limparMensagem() {
+        if (this.erros && this.erros.length > 0) {
+            this.erros.pop();
+        }
+        if (this.retorno && this.retorno.mensagem !== null) {
+            this.retorno.mensagem = null
+        }
     }
 }

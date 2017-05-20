@@ -1,4 +1,5 @@
 <template>
+    <require from="aurelia-mask"></require>    
     <!--formulario-->
     <div class="card">
         <div class="card-block">
@@ -12,7 +13,7 @@
                                 <div class="col-sm-12 col-md-4 col-md-4">
                                     <div class="form-group ${is_valid ? '' : 'has-warning'}">
                                         <label for="_veiculo_placa">Placa*</label>
-                                        <input placa type="text" readonly.bind="veiculo._id" class="form-control uptext" id="_veiculo_placa" ref="_placa" value.bind="veiculo.placa & updateTrigger:'blur':'change'" change.delegate="validar()">
+                                        <input type="text" readonly.bind="veiculo._id" keyup.trigger="limparMensagem()" class="form-control uptext focus" id="_veiculo_placa"  masked="value.bind: veiculo.placa; mask: ***-9999; bind-masking: true">
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-8 col-md-8">
