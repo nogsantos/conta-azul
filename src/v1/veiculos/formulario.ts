@@ -12,7 +12,7 @@ import { Veiculo } from "./veiculo";
 export class VeiculosFormulario {
     @bindable veiculo: Veiculo;
     @bindable erros: Array<string>;    
-    private _valor;
+    private _valor; // Passado por referência por conta da máscara aplicada no campo.
     private is_valid: boolean;
     private retorno: Object | any;
     private combustiveis: Array<string>;
@@ -188,7 +188,7 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     validarUrlImagem(): boolean {
-        return /^https?:\/\/.{3,}$/.test(this.veiculo.imagem);
+        return /^https?:\/\/(?:[a-z\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png)$/g.test(this.veiculo.imagem);
     }
     /**
      * Limpa as mensagens de erro caso existam

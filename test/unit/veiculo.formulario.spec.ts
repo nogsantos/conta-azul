@@ -6,7 +6,7 @@ import { Veiculo } from "../../src/v1/veiculos/veiculo";
 import { VeiculosModel } from "../../src/v1/veiculos/model";
 import { Router } from "aurelia-router";
 
-describe('Formulário veículo', function () {
+describe('Formulário veículo:', function () {
     let container: Container;
     let formulario: VeiculosFormulario | any;
     let veiculo: Veiculo;
@@ -31,16 +31,14 @@ describe('Formulário veículo', function () {
         veiculo.modelo = "Celta";
         veiculo.placa = "ABC-1234";
         expect(formulario.validar()).toBe(true);
-    });
 
-    it("os campos obrigatorios são validados quando não informados", () => {
         veiculo.marca = null;
         veiculo.modelo = null;
         veiculo.placa = null;
         expect(formulario.validar()).toBe(false);
     });
 
-    it("o endeço da imagem possui uma url em um formato válido", () => {
+    it("o endeço da imagem possui uma url e tipo em um formato válido", () => {
         veiculo.imagem = "https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
         expect(formulario.validarUrlImagem()).toBe(true);
         veiculo.imagem = "alguma url";

@@ -1,4 +1,4 @@
-import { autoinject, bindable, bindingMode } from 'aurelia-framework';
+import { autoinject, bindable, bindingMode, LogManager } from 'aurelia-framework';
 import { Router } from "aurelia-router";
 import { VeiculosModel } from "./model";
 import { Veiculo } from "./veiculo";
@@ -12,6 +12,7 @@ import * as $ from 'jquery';
  */
 @autoinject()
 export class VeiculosListagem {
+    private log = LogManager.getLogger('LISTAGEM');
     /*
      * Obj 
      */
@@ -26,7 +27,7 @@ export class VeiculosListagem {
      * Tooltip 
      */
     trigger = 'none';
-    text = '<p><b>Dica</b></p>Para editar, basta apenas um clique duplo na linha do item desejado.'
+    text = '<b>Dica</b><br>Para editar, basta apenas um clique duplo na linha do item desejado.'
     /*     
      * Check
      */
@@ -37,8 +38,6 @@ export class VeiculosListagem {
      * Busca
      */
     @bindable termo_para_busca: string;
-
-    @bindable check:boolean;
     /**
      * CDI
      * 
@@ -70,34 +69,9 @@ export class VeiculosListagem {
                 this.trigger = 'mouseover';
                 this.seed();
             }
-        }).catch(err => {
-            console.log(err);
+        }).catch(error => {
+            this.log.error(`[listarTodos] ${error}`);
         });
-        /*
-         * Habilita o check
-         */
-        this.master_is_checked = false;
-        this.checkToggle();
-    }
-    /**
-     * Checkbox toggle
-     * 
-     * 
-     * @memberof VeiculosListagem
-     */
-    checkToggle() {
-        $(this.toggle_check).click(event => {
-            if (this.master_is_checked) {
-                this.master_is_checked = false;
-                $(':checkbox.checkitem').prop('checked', false);
-                this.popItens();
-                return;
-            }
-            this.master_is_checked = true;
-            $(':checkbox.checkitem').prop('checked', true);
-            
-        })​;
-            this.verica();
     }
     /**
      * Limpa o array de itens para exclusão
@@ -106,7 +80,7 @@ export class VeiculosListagem {
      * @memberof VeiculosListagem
      */
     popItens() {
-        if (this.select_exclusao.length > 0) {
+        while (this.select_exclusao.length) {
             this.select_exclusao.pop();
         }
     }
@@ -122,7 +96,7 @@ export class VeiculosListagem {
     /**
      * Editar um veículo
      * 
-     * @param {any} id 
+     * @param {any} veiculo
      * 
      * @memberof VeiculosListagem
      */
@@ -142,7 +116,7 @@ export class VeiculosListagem {
             });
         }).catch(error => {
             alert("Desculpe, alguns erros inesperados ocorreram")
-            console.log(error);
+            this.log.error(`[seed] ${error}`);
         });
     }
     /**
@@ -155,7 +129,6 @@ export class VeiculosListagem {
      */
     current_pageChanged(newVal, oldVal) {
         this.master_is_checked = false;
-        this.checkToggle();
         let offset: number = 0;
         offset = ((newVal * 5) - 5);
         this.db.fetch(offset).then(response => {
@@ -173,6 +146,9 @@ export class VeiculosListagem {
      * @memberof VeiculosListagem
      */
     excluir() {
+        /*
+         * Prepeara os itens selecionados para a exclisão 
+         */
         $(':checkbox.checkitem').prop('checked', (posicao, is_checked) => {
             if (is_checked) {
                 $(':checkbox.checkitem').prop('defaultValue', (pos, val) => {
@@ -185,26 +161,34 @@ export class VeiculosListagem {
         let para_exclusao = [];
         this.select_exclusao.forEach(val => {
             para_exclusao.push(JSON.parse(val));
-        })
+        });
+        /*
+         * Exclui em massa 
+         */
         this.db.batch(para_exclusao).then(result => {
             this.db.fetch().then(response => {
+                /*
+                 * Prepara a listagem 
+                 */
                 this.master_is_checked = false;
+                this.popItens();
+                /*
+                 * Lista os itens novamente
+                 */
                 this.total_items = response.total_rows;
                 this.veiculos = response.rows;
-
-                this.verica();
             });
         }).catch(error => {
-            console.log(error);
+            this.log.error(`[batch] ${error}`);
         });
     }
     /**
-     * Busca
+     * Buscador. A busca pode ser realizado por Modelo ou Combustível
      * 
      * 
      * @memberof VeiculosListagem
      */
-    buscar() {        
+    buscar() {
         if (this.termo_para_busca) {
             this.db.fetch(null, this.termo_para_busca).then(response => {
                 this.veiculos = response.docs;
@@ -215,13 +199,17 @@ export class VeiculosListagem {
         this.listarTodos();
     }
     /**
-     * @todo
+     * Clique no check master
      * 
-     * 
-     * @memberof VeiculosListagem
+     * @param newVal 
+     * @param oldVal 
      */
-    verica(){
-        console.log($('.table:checkbox:checked'));
-        this.check = $('.table:checkbox:checked').length > 0
+    master_is_checkedChanged(newVal, oldVal) {
+        if (!newVal) {
+            $(':checkbox.checkitem').prop('checked', false);
+            this.popItens();
+            return;
+        }
+        $(':checkbox.checkitem').prop('checked', true);
     }
 }

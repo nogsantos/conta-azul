@@ -1,5 +1,5 @@
 /**
- * 
+ * Objeto Veículo
  * 
  * @export
  * @class Veiculo

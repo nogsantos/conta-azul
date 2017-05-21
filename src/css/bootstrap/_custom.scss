@@ -12,7 +12,7 @@ $pagination-active-bg: #D9E8FA;
 $pagination-active-border-color :#91C6F4;
 // tabela
 $table-head-color :#46617E;
-$table-head-bg: #F8FAFC;
+$table-head-bg: #F8FAFD;
 .with-border {
     border: 1px solid #C9D2DC !important;
     -moz-border-radius: 5px !important;
@@ -30,6 +30,33 @@ $table-head-bg: #F8FAFC;
 
 .mh15 {
     min-height: 15rem !important;
+}
+
+.custom-checkbox {
+    input[type=checkbox]:checked:after {
+        content: "\2714" !important;
+        border-color: #8bc8f6 !important;
+    }
+    input[type=checkbox] {
+        margin: 0 !important;
+    }
+    input[type=checkbox]:after {
+        content: "";
+        position: relative;
+        top: -4px;
+        display: inline-block;
+        visibility: visible;
+        width: 21px;
+        height: 21px;
+        padding: 2px;
+        background-color: #fff;
+        color: #385a7b;
+        text-align: center;
+        border: 1px solid #c9d3dd;
+        border-radius: 3px;
+        font-size: 12px;
+        cursor: pointer;
+    }    
 }
 
 .uptext {
