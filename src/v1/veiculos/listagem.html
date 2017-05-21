@@ -3,14 +3,14 @@
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 float-left m10">
             <button type="button" class="btn btn-success" click.delegate="novo()">Novo carro</button>            
-            <button if.bind="select_exclusao.length > 0 || toggle_check.checked" type="button" class="btn btn-danger" click.delegate="excluir()">Excluir selecionados</button>            
+            <button if.bind="check" type="button" class="btn btn-danger" click.delegate="excluir()">Excluir selecionados</button>            
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 m10">    
             <form class="form-inline float-right">
                 <label class="sr-only" for="inlineFormInputGroup">Pesquisar</label>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
                     <div class="input-group-addon"><img src="img/ic_magnify.svg"></div>
-                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar">
+                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar" autocomplete="off" enter-key-press.call="buscar({termo_para_busca})" value.bind="termo_para_busca">
                 </div>
             </form>            
         </div>        
@@ -38,16 +38,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr repeat.for="veiculo of veiculos" dblclick.trigger="editar(veiculo.id)">
+                    <tr repeat.for="veiculo of veiculos" dblclick.trigger="editar(veiculo.doc._id || veiculo._id)">
                         <td>
                             <label class="custom-control custom-checkbox">
-                                <input type="checkbox" value='{"_id":"${veiculo.doc._id}","_rev":"${veiculo.doc._rev}","_deleted":true}' checked.bind="select_exclusao" class="custom-control-input checkitem">                                
+                                <input type="checkbox" value='{"_id":"${veiculo.doc._id || veiculo._id}","_rev":"${veiculo.doc._rev || veiculo._rev}","_deleted":true}' checked.bind="select_exclusao" class="custom-control-input checkitem">                                
                                 <span class="custom-control-indicator"></span>                                
                             </label>
                         </td>
-                        <td class="align-middle">${veiculo.doc.placa}</td>
-                        <td class="align-middle">${veiculo.doc.modelo}</td>
-                        <td class="align-middle">${veiculo.doc.marca}</td>
+                        <td class="align-middle">${veiculo.doc.placa || veiculo.placa}</td>
+                        <td class="align-middle">${veiculo.doc.modelo || veiculo.modelo}</td>
+                        <td class="align-middle">${veiculo.doc.marca || veiculo.marca}</td>
                         <td class="align-middle">
                             <span if.bind="!veiculo.doc.imagem">Sem foto</span>
                             <div if.bind="veiculo.doc.imagem">
@@ -57,20 +57,20 @@
                                                         trigger.bind: 'mouseover';"
                                     target="_blank">Imagem</a>                            
                                 <div ref="imagemPopover">
-                                    <h3 class="popover-title">${veiculo.doc.modelo}</h3>
+                                    <h3 class="popover-title">${veiculo.doc.modelo || veiculo.modelo}</h3>
                                     <div class="popover-content">
                                         <img src.bind="veiculo.doc.imagem" class='img-thumbnail'>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td class="align-middle">${veiculo.doc.combustivel}</td>
-                        <td class="align-middle text-right">${veiculo.doc.valor}</td>
+                        <td class="align-middle">${veiculo.doc.combustivel || veiculo.combustivel}</td>
+                        <td class="align-middle text-right">${veiculo.doc.valor || veiculo.valor}</td>
                     </tr>
                 </tbody>
             </table>
             <div if.bind="veiculos.length === 0" class="d-flex justify-content-center">
-                <h6>Todos os itens foram excluídos, atualize a página com a listagem vazia para gerar a carga inicial de dados.</h6>
+                <h6>Nenhum ve&iacute;culo foi localizado</h6>
             </div>
         </div>
     </div>

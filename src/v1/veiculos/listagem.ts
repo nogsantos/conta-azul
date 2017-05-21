@@ -33,6 +33,12 @@ export class VeiculosListagem {
     @bindable toggle_check;
     @bindable private master_is_checked: boolean;
     @bindable select_exclusao: string[] = [];
+    /*     
+     * Busca
+     */
+    @bindable termo_para_busca: string;
+
+    @bindable check:boolean;
     /**
      * CDI
      * 
@@ -47,6 +53,15 @@ export class VeiculosListagem {
      * Elements binding
      */
     bind() {
+        this.listarTodos();
+    }
+    /**
+     * Listar todos os itens
+     * 
+     * 
+     * @memberof VeiculosListagem
+     */
+    listarTodos() {
         this.db.fetch().then(response => {
             this.total_items = response.total_rows;
             if (response.rows.length > 0) {
@@ -71,7 +86,7 @@ export class VeiculosListagem {
      * @memberof VeiculosListagem
      */
     checkToggle() {
-        $(this.toggle_check).on('click', () => {
+        $(this.toggle_check).click(event => {
             if (this.master_is_checked) {
                 this.master_is_checked = false;
                 $(':checkbox.checkitem').prop('checked', false);
@@ -80,7 +95,9 @@ export class VeiculosListagem {
             }
             this.master_is_checked = true;
             $(':checkbox.checkitem').prop('checked', true);
+            
         })​;
+            this.verica();
     }
     /**
      * Limpa o array de itens para exclusão
@@ -124,7 +141,7 @@ export class VeiculosListagem {
                 this.veiculos = resolve.rows;
             });
         }).catch(error => {
-            alert("Desculpe, alguns erros ocorreram")
+            alert("Desculpe, alguns erros inesperados ocorreram")
             console.log(error);
         });
     }
@@ -173,10 +190,38 @@ export class VeiculosListagem {
             this.db.fetch().then(response => {
                 this.master_is_checked = false;
                 this.total_items = response.total_rows;
-                this.veiculos = response.rows;                
+                this.veiculos = response.rows;
+
+                this.verica();
             });
         }).catch(error => {
             console.log(error);
         });
+    }
+    /**
+     * Busca
+     * 
+     * 
+     * @memberof VeiculosListagem
+     */
+    buscar() {        
+        if (this.termo_para_busca) {
+            this.db.fetch(null, this.termo_para_busca).then(response => {
+                this.veiculos = response.docs;
+                this.total_items = 0;
+            });
+            return;
+        }
+        this.listarTodos();
+    }
+    /**
+     * @todo
+     * 
+     * 
+     * @memberof VeiculosListagem
+     */
+    verica(){
+        console.log($('.table:checkbox:checked'));
+        this.check = $('.table:checkbox:checked').length > 0
     }
 }

@@ -10,19 +10,19 @@
 * Desenvolver CRUD de cadastro de veículos.
 * Será possível realizar uma busca, filtrando os veículos por combustível e/ou marca.
 * Na primeira execução trazer os veiculos da lista anexa.
-* A lista de veículos deve apresentar 5 veículos por página.*
+* A lista de veículos deve apresentar 5 veículos por página.
 * Deve ser uma Single Page Application
 
 ##### Objeto veículo
 
 * Placa*
-* Imagem.
+* Imagem
 * Marca*
 * Modelo*
 * Combustível (Gasolina, Álcool, Flex)
 * Valor
 
-__*Campos obrigatórios__
+*Campos obrigatórios*
 
 ## Expectativas:
 

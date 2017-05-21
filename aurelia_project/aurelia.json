@@ -121,6 +121,11 @@
                         "main": "pouchdb.min"
                     },
                     {
+                        "name": "pouchdb-find",
+                        "path": "../node_modules/pouchdb-find/dist",
+                        "main": "pouchdb.pouchdb-find.min"
+                    },
+                    {
                         "name": "aurelia-bootstrap",
                         "path": "../node_modules/aurelia-bootstrap/dist/amd",
                         "main": "index",

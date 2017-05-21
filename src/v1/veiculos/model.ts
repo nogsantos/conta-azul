@@ -1,11 +1,13 @@
 import { Veiculo } from "./veiculo";
 import * as Pouchdb from "pouchdb";
+import * as PouchdbFind from "pouchdb-find";
 /**
  * Model veículos
  * 
  * @export
  * @class VeiculosModel
  */
+Pouchdb.plugin(PouchdbFind);
 export class VeiculosModel {
     private db: Pouchdb
     private veiculo: Veiculo;
@@ -16,6 +18,7 @@ export class VeiculosModel {
      */
     constructor() {
         this.db = new Pouchdb('conta-azul-veiculos');
+        // Pouchdb.replicate('conta-azul-veiculos', 'http://localhost:5984/conta-azul-veiculos');
     }
     /**
      * Cadastra um item
@@ -63,28 +66,69 @@ export class VeiculosModel {
         }
     }
     /**
-     * Consulta todos os itens
+     * Define o tipo de consulta
      * 
      * @param {number} [skip] 
+     * @param {string} [param] 
+     * @returns {Promise<any>} 
      * 
      * @memberof VeiculosModel
      */
-    fetch(skip?: number): Promise<any> {
+    fetch(skip?: number, param?: string): Promise<any> {
         try {
-            return this.db.allDocs({
-                include_docs: true,
-                descending: true,
-                limit: 5,
-                skip: skip ? skip : 0
-            }, (error, result) => {
-                if (error) {
-                    Promise.reject(error);
-                }
-                Promise.resolve(result.rows);
-            });
+            if (!param) {
+                return this.fetchAllDocs(skip);
+            } else {
+                return this.fetchByFind(param);
+            }
         } catch (error) {
             return Promise.reject(error);
         }
+    }
+    /**
+     * Consulta todos os documentos
+     * 
+     * @param {number} skip 
+     * @returns {Promise<any>} 
+     * 
+     * @memberof VeiculosModel
+     */
+    fetchAllDocs(skip: number): Promise<any> {
+        return this.db.allDocs({
+            include_docs: true,
+            descending: true,
+            limit: 5,
+            skip: skip ? skip : 0
+        }, (error, result) => {
+            if (error) {
+                Promise.reject(error);
+            }
+            Promise.resolve(result.rows);
+        });
+    }
+    /**
+     * Consulta por parâmetro
+     * 
+     * @param {any} param 
+     * @returns {Promise<any>} 
+     * 
+     * @memberof VeiculosModel
+     */
+    fetchByFind(param): Promise<any> {
+        let term = new RegExp(param, 'i');        
+        return this.db.find({
+            selector: {
+                $or: [
+                    { marca: { $regex: term } },
+                    { combustivel: { $regex: term } }
+                ]
+            }
+        }, (error, result) => {
+            if (error) {
+                Promise.resolve(error);
+            }
+            Promise.resolve(result);
+        });
     }
     /**
      * Consulta um item por id
