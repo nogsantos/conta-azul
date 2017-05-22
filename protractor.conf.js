@@ -7,7 +7,8 @@ exports.config = {
     },
 
     //seleniumAddress: 'http://0.0.0.0:4444',
-    specs: ['test/e2e/dist/*.js'],
+    specs: ['test/e2e/dist/**/*.js'],
+    allScriptsTimeout: 20000,
 
     plugins: [{
         path: 'aurelia.protractor.js'
@@ -16,6 +17,8 @@ exports.config = {
     // Options to be passed to Jasmine-node.
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 30000
+        defaultTimeoutInterval: 100000,
+        isVerbose: true,
+        includeStackTrace: true
     }
 };

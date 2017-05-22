@@ -2,7 +2,7 @@
     <!--ações-->
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 float-left m10">
-            <button type="button" class="btn btn-success" click.delegate="novo()">Novo carro</button>            
+            <button type="button" class="btn btn-success" id="btn_novo_carro" click.delegate="novo()">Novo carro</button>            
             <button if.bind="master_is_checked || select_exclusao.length > 0" type="button" class="btn btn-danger" click.delegate="excluir()">Excluir selecionados</button>            
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 m10">    
@@ -10,7 +10,7 @@
                 <label class="sr-only" for="inlineFormInputGroup">Pesquisar</label>
                 <div class="input-group">
                     <div class="input-group-addon"><img src="img/ic_magnify.svg"></div>
-                    <input type="text" aubs-tooltip="text:Marca ou Combustível<br><small>Tecla Enter para ativar</small>; trigger: focus;" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar" autocomplete="off" enter-key-press.call="buscar({termo_para_busca})" value.bind="termo_para_busca">
+                    <input type="text" id="txt_busca" aubs-tooltip="text:Marca ou Combustível<br><small>Tecla Enter para ativar</small>; trigger: focus;" class="form-control" id="inlineFormInputGroup" placeholder="Pesquisar" autocomplete="off" enter-key-press.call="buscar({termo_para_busca})" value.bind="termo_para_busca">
                 </div>
             </form>            
         </div>        

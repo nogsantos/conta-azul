@@ -13,7 +13,7 @@
                                 <div class="col-sm-12 col-md-4 col-md-4">
                                     <div class="form-group ${is_valid ? '' : 'has-warning'}">
                                         <label for="_veiculo_placa">Placa*</label>
-                                        <input type="text" readonly.bind="veiculo._id" keyup.trigger="validar()" class="form-control uptext focus" id="_veiculo_placa"  masked="value.bind: veiculo.placa; mask: ***-9999; bind-masking: true">
+                                        <input type="text" readonly.bind="veiculo._id" keyup.trigger="validar()" class="form-control uptext focus" id="_veiculo_placa" value="" masked="value.bind: veiculo.placa; mask: ***-9999; bind-masking: true">
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-8 col-md-8">
@@ -62,27 +62,27 @@
                 <div class="col-sm-12 col-md-2 col-lg-2 btn-row mh15">
                     <div if.bind="!veiculo._id" class="row m10">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <button click.delegate="persistir()" class="btn btn-primary btn-block">Cadastrar</button>
+                            <button click.delegate="persistir()" id="btn_cadastrar" class="btn btn-primary btn-block">Cadastrar</button>
                         </div>
                     </div>
                     <div if.bind="veiculo._id" class="row m10">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <button click.delegate="persistir(veiculo._id)" class="btn btn-primary btn-block">Editar</button>
+                            <button click.delegate="persistir(veiculo._id)" id="btn_editar" class="btn btn-primary btn-block">Editar</button>
                         </div>
                     </div>
                     <div if.bind="veiculo._id" class="row m10">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <button click.delegate="excluir(veiculo._id)" class="btn btn-warning btn-block">Excluir</button>
+                            <button click.delegate="excluir(veiculo._id)" id="btn_excluir" class="btn btn-warning btn-block">Excluir</button>
                         </div>
                     </div>
                     <div if.bind="veiculo._id" class="row m10">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <button click.delegate="novo()" class="btn btn-secondary btn-block">Novo</button>
+                            <button click.delegate="novo()" id="btn_novo" class="btn btn-secondary btn-block">Novo</button>
                         </div>
                     </div>
                     <div class="row btn-cancel-row m10">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <button click.delegate="cancelar()" class="btn btn-link btn-block">Cancelar</button>
+                            <button click.delegate="cancelar()" id="btn_cancelar" class="btn btn-link btn-block">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                 <strong>${retorno.titulo}:</strong> ${retorno.mensagem}
             </div>
             <div if.bind="erros.length > 0" class="alert alert-warning" role="alert">
-                <h4 class="alert-heading">Aten&ccedil;&atilde;o</h4>
+                <h5 class="alert-heading">Aten&ccedil;&atilde;o</h5>
                 <ul>
                     <li repeat.for="error of erros">
                         ${error}

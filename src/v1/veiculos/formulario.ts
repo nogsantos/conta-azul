@@ -11,7 +11,7 @@ import { Veiculo } from "./veiculo";
 @autoinject()
 export class VeiculosFormulario {
     @bindable veiculo: Veiculo;
-    @bindable erros: Array<string>;    
+    @bindable erros: Array<string>;
     private _valor; // Passado por referência por conta da máscara aplicada no campo.
     private is_valid: boolean;
     private retorno: Object | any;
@@ -55,7 +55,7 @@ export class VeiculosFormulario {
             mensagem: null,
             titulo: null,
             tipo: null
-        };        
+        };
         this.limparMensagem();
     }
     /**
@@ -65,25 +65,26 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     persistir() {
-        if (this.validar()) {
-            this.limparMensagem();            
-            this.veiculo._id = this.veiculo.placa = this.veiculo.placa.toUpperCase();
-            this.veiculo.valor = this._valor.value;
-            this.db.create(this.veiculo).then(response => {
-                this.veiculo._id = response.id;
-                this.veiculo._rev = response.rev;
-                this.mensagemSucesso("persistido");
-            }).catch(error => {
-                switch (error.status) {
-                    case 409:
-                        this.erroVeiculoJaCadastrado();
-                        break;
-                    default:
-                        this.mensagemErro(error.status)
-                        break;
-                }
-            });
+        if (!this.validar()) {
+            return;
         }
+        this.limparMensagem();
+        this.veiculo._id = this.veiculo.placa = this.veiculo.placa.toUpperCase();
+        this.veiculo.valor = this._valor.value;
+        this.db.create(this.veiculo).then(response => {
+            this.veiculo._id = response.id;
+            this.veiculo._rev = response.rev;
+            this.mensagemSucesso("persistido");
+        }).catch(error => {
+            switch (error.status) {
+                case 409:
+                    this.erroVeiculoJaCadastrado();
+                    break;
+                default:
+                    this.mensagemErro(error.status)
+                    break;
+            }
+        });
     }
     /**
      * Mesagem e tratamento para erros
