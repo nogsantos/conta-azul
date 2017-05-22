@@ -34,6 +34,7 @@ describe('App', () => {
             route: ['index', 'home', 'veiculo', ''],
             name: 'VeiculosListagem',
             moduleId: 'v1/veiculos/listagem',
+            title: 'Listagem',
             nav: false,
             auth: false
         });
@@ -44,6 +45,7 @@ describe('App', () => {
             route: 'veiculo/cadastrar',
             name: 'VeiculosCadastrar',
             moduleId: 'v1/veiculos/formulario',
+            title: 'Cadastro de veículos',
             nav: false,
             auth: false
         });
@@ -54,6 +56,7 @@ describe('App', () => {
             route: 'veiculo/editar/:id?',
             name: 'VeiculosEditar',
             moduleId: 'v1/veiculos/formulario',
+            title: 'Edição de veículos',
             nav: false,
             auth: false
         });
