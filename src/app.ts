@@ -1,5 +1,5 @@
 import { Aurelia } from 'aurelia-framework';
-import { NavigationInstruction, RouterConfiguration, Router } from "aurelia-router";
+import { NavigationInstruction, RouterConfiguration, Router, RouteConfig } from "aurelia-router";
 /**
  * Define e configura as rotas do app
  * 
@@ -10,16 +10,27 @@ import { NavigationInstruction, RouterConfiguration, Router } from "aurelia-rout
 export class App {
     router: Router;
     /**
-       * Configuração das rotas
-       * 
-       * @param {RouterConfiguration} config 
-       * @param {AppRouter} router 
-       * 
-       * @memberof App
-       */
+     * Configuração das rotas
+     * 
+     * @param {RouterConfiguration} config 
+     * @param {AppRouter} router 
+     * 
+     * @memberof App
+     */
     configureRouter(config: RouterConfiguration, router: Router) {
         config.title = "Teste Fabricio Nogueira";
-
+        /*
+         * Tratamento para rotas desconhecidas         
+         */
+        try {
+            let handleUnknownRoutes = (instruction: NavigationInstruction): RouteConfig => {
+                return { route: '404', moduleId: 'erro-404' };
+            }
+            config.mapUnknownRoutes(handleUnknownRoutes);
+        } catch (error) { }
+        /*
+         * Mapeamento das rotas 
+         */
         config.map([
             {
                 route: ['index', 'home', 'veiculo', ''],
@@ -43,18 +54,6 @@ export class App {
                 auth: false
             }
         ]);
-        /*
-         * Tratando as rotas desconhecidas
-         */
-        // let navStrat = (instruction: NavigationInstruction) => {
-        //     if (instruction.config === null) {
-        //         return '404';
-        //     }
-        //     instruction.config.moduleId = instruction.fragment;
-        //     instruction.config.href = instruction.fragment;
-        // };
-        // config.mapUnknownRoutes(navStrat);
-
         this.router = router;
     }
 }

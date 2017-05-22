@@ -1,6 +1,6 @@
 import { Veiculo } from '../../src/v1/veiculos/veiculo';
 
-describe('Objeto veículo', () => {
+describe('Entidade veículo:', () => {
     let veiculo: Veiculo;
 
     beforeEach(() => {

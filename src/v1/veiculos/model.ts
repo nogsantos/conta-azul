@@ -1,11 +1,13 @@
 import { Veiculo } from "./veiculo";
 import * as Pouchdb from "pouchdb";
+import * as PouchdbFind from "pouchdb-find";
 /**
  * Model veículos
  * 
  * @export
  * @class VeiculosModel
  */
+Pouchdb.plugin(PouchdbFind);
 export class VeiculosModel {
     private db: Pouchdb
     private veiculo: Veiculo;
@@ -16,6 +18,7 @@ export class VeiculosModel {
      */
     constructor() {
         this.db = new Pouchdb('conta-azul-veiculos');
+        // Pouchdb.replicate('conta-azul-veiculos', 'http://localhost:5984/conta-azul-veiculos');
     }
     /**
      * Cadastra um item
@@ -25,13 +28,18 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     create(veiculo: Veiculo | any): Promise<any> {
-        return this.db.put(veiculo, function callback(error, result) {
-            if (error) {
-                return Promise.reject(error);
-            } else {
-                return Promise.resolve(result);
-            }
-        });
+        try {
+            let promise = this.db.put(veiculo, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                    return;
+                }
+                Promise.resolve(result);
+            });
+            return promise;
+        } catch (error) {
+            return Promise.reject(error);
+        }
     }
     /**
      * Exclui um item
@@ -41,33 +49,86 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     delete(docId: string): Promise<any> {
-        return this.db.get(docId).then(doc => {
-            doc._deleted = true;
-            return this.db.put(doc);
-        }).catch(error => {
+        try {
+            return this.db.get(docId, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                this.db.remove(result._id, result._rev, (error, result) => {
+                    if (error) {
+                        Promise.reject(error);
+                    }
+                    Promise.resolve(result);
+                });
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
     /**
-     * Consulta todos os itens
+     * Define o tipo de consulta
      * 
      * @param {number} [skip] 
+     * @param {string} [param] 
+     * @returns {Promise<any>} 
      * 
      * @memberof VeiculosModel
      */
-    fetch(skip?: number): Promise<any> {
-        return this.db.allDocs(
-            {
-                include_docs: true,
-                descending: true,
-                limit: 5,
-                skip: skip ? skip : 0
-            }, (error, doc) => {
-                if (error) {
-                    return Promise.reject(error);
-                }
-                return Promise.resolve(doc.rows);
-            });
+    fetch(skip?: number, param?: string): Promise<any> {
+        try {
+            if (!param) {
+                return this.fetchAllDocs(skip);
+            } else {
+                return this.fetchByFind(param);
+            }
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+    /**
+     * Consulta todos os documentos
+     * 
+     * @param {number} skip 
+     * @returns {Promise<any>} 
+     * 
+     * @memberof VeiculosModel
+     */
+    fetchAllDocs(skip: number): Promise<any> {
+        return this.db.allDocs({
+            include_docs: true,
+            descending: true,
+            limit: 5,
+            skip: skip ? skip : 0
+        }, (error, result) => {
+            if (error) {
+                Promise.reject(error);
+            }
+            Promise.resolve(result.rows);
+        });
+    }
+    /**
+     * Consulta por parâmetro
+     * 
+     * @param {any} param 
+     * @returns {Promise<any>} 
+     * 
+     * @memberof VeiculosModel
+     */
+    fetchByFind(param): Promise<any> {
+        let term = new RegExp(param, 'i');        
+        return this.db.find({
+            selector: {
+                $or: [
+                    { marca: { $regex: term } },
+                    { combustivel: { $regex: term } }
+                ]
+            }
+        }, (error, result) => {
+            if (error) {
+                Promise.resolve(error);
+            }
+            Promise.resolve(result);
+        });
     }
     /**
      * Consulta um item por id
@@ -77,11 +138,16 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     get(docId: string): Promise<any> {
-        return this.db.get(docId).then(item => {
-            return Promise.resolve(item);
-        }).catch(error => {
+        try {
+            return this.db.get(docId, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                Promise.resolve(result);
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
     /**
      * Criar, atualizar, excluir multiplos documentos
@@ -95,11 +161,15 @@ export class VeiculosModel {
      * @memberof VeiculosModel
      */
     batch(docs: Array<any>): Promise<any> {
-        return this.db.bulkDocs(docs).then(result => {
-            return Promise.resolve(result);
-        }).catch(error => {
+        try {
+            return this.db.bulkDocs(docs, (error, result) => {
+                if (error) {
+                    Promise.reject(error);
+                }
+                Promise.resolve(result);
+            });
+        } catch (error) {
             return Promise.reject(error);
-        });
+        }
     }
-
 }

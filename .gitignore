@@ -4,6 +4,7 @@ node_modules
 
 # App 
 scripts/app-bundle.js.map
+scripts/vendor-bundle.js.map
 scripts/app-bundle.js
 scripts/vendor-bundle.js
 scripts/materialize-bundle.js

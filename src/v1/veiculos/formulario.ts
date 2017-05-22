@@ -1,5 +1,4 @@
 import { autoinject, bindable } from 'aurelia-framework';
-import { ValidationController, validationMessages, ValidationRules } from 'aurelia-validation';
 import { Router } from "aurelia-router";
 import { VeiculosModel } from "./model";
 import { Veiculo } from "./veiculo";
@@ -11,37 +10,19 @@ import { Veiculo } from "./veiculo";
  */
 @autoinject()
 export class VeiculosFormulario {
-    private _placa;
-    private _valor;
+    @bindable veiculo: Veiculo;
+    @bindable erros: Array<string>;    
+    private _valor; // Passado por referência por conta da máscara aplicada no campo.
+    private is_valid: boolean;
     private retorno: Object | any;
     private combustiveis: Array<string>;
     /**
      * CDI
      */
     constructor(
-        @bindable private veiculo: Veiculo,
         private db: VeiculosModel,
         private subrouter: Router,
-        private controller: ValidationController
-    ) {
-        ValidationRules
-            .ensure((veiculo: Veiculo) => veiculo.placa)
-            .displayName("Placa")
-            .required()
-            .ensure((veiculo: Veiculo) => veiculo.marca)
-            .displayName("Marca")
-            .required()
-            .ensure((veiculo: Veiculo) => veiculo.modelo)
-            .displayName("Modelo")
-            .required()
-            .ensure((veiculo: Veiculo) => veiculo.imagem)
-            .displayName("Imagem")
-            .matches(/^https?:\/\/.{3,}$/)
-            .matches(/^\S*$/)
-            .on(Veiculo);
-        validationMessages['required'] = `\${$displayName} é um campo obrigatório`;
-        validationMessages['matches'] = `O campo \${$displayName} não está no formato correto, deve ser uma URL válida`;
-    }
+    ) { }
     /**
      * Quando o formulário é ativado
      * 
@@ -49,7 +30,7 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     activate(veiculo?: any): void {
-        this.paramsInitialize()
+        this.inicializarAtributos();
         if (veiculo.id) {
             this.db.get(`${veiculo.id}`).then(result => {
                 this.veiculo = Object.assign({}, result);
@@ -62,18 +43,20 @@ export class VeiculosFormulario {
      * 
      * @memberof VeiculosFormulario
      */
-    paramsInitialize() {
+    inicializarAtributos() {
         this.veiculo = new Veiculo();
-        this.retorno = {
-            mensagem: null,
-            titulo: null,
-            tipo: null
-        };
+        this.is_valid = true;
         this.combustiveis = [
             "Gasolina",
             "Alcool",
             "Flex"
         ];
+        this.retorno = {
+            mensagem: null,
+            titulo: null,
+            tipo: null
+        };        
+        this.limparMensagem();
     }
     /**
      * Persistir o item
@@ -82,34 +65,61 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     persistir() {
-        let placa = this._placa.value.toUpperCase();
-        this.veiculo._id = placa
-        this.veiculo.placa = placa;
-        this.controller.validate().then(validate => {
-            if (validate.valid) {
-                this.veiculo.valor = this._valor.value;
-                this.db.create(this.veiculo).then(result => {
-                    this.veiculo._id = result.id;
-                    this.retorno.mensagem = "Item persistido";
-                    this.retorno.titulo = "Sucesso";
-                    this.retorno.tipo = "success";
-                }).catch(error => {
-                    switch (error.status) {
-                        case 409:
-                            this.retorno.mensagem = `Veículo placa ${this.veiculo.placa} já cadastrado`;
-                            this.retorno.tipo = "warning";
-                            this.retorno.titulo = "Alerta";
-                            this.veiculo._id = null;
-                            break;
-                        default:
-                            this.retorno.mensagem = error;
-                            this.retorno.tipo = "danger";
-                            this.retorno.titulo = "Erro";
-                            break;
-                    }
-                });
-            }
-        });
+        if (this.validar()) {
+            this.limparMensagem();            
+            this.veiculo._id = this.veiculo.placa = this.veiculo.placa.toUpperCase();
+            this.veiculo.valor = this._valor.value;
+            this.db.create(this.veiculo).then(response => {
+                this.veiculo._id = response.id;
+                this.veiculo._rev = response.rev;
+                this.mensagemSucesso("persistido");
+            }).catch(error => {
+                switch (error.status) {
+                    case 409:
+                        this.erroVeiculoJaCadastrado();
+                        break;
+                    default:
+                        this.mensagemErro(error.status)
+                        break;
+                }
+            });
+        }
+    }
+    /**
+     * Mesagem e tratamento para erros
+     * 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    erroVeiculoJaCadastrado() {
+        this.retorno.mensagem = `Veículo placa ${this.veiculo.placa} já cadastrado`;
+        this.retorno.tipo = "warning";
+        this.retorno.titulo = "Alerta";
+        this.veiculo = new Veiculo();
+    }
+    /**
+     * Define a mensagem de sucesso
+     * 
+     * @param {string} acao 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    mensagemSucesso(acao: string) {
+        this.retorno.mensagem = `Veículo ${acao}`;
+        this.retorno.titulo = "Sucesso";
+        this.retorno.tipo = "success";
+    }
+    /**
+     * Define a mensagem de sucesso
+     * 
+     * @param {string} acao 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    mensagemErro(acao: string) {
+        this.retorno.mensagem = `${acao}`;
+        this.retorno.tipo = "danger";
+        this.retorno.titulo = "Erro";
     }
     /**
      * Habilita o formulário para um novo cadastro
@@ -118,7 +128,7 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     novo() {
-        this.paramsInitialize();
+        this.inicializarAtributos();
     }
     /**
      * Cancela retornando a listagem
@@ -136,15 +146,62 @@ export class VeiculosFormulario {
      * @memberof VeiculosFormulario
      */
     excluir(placa) {
-        this.db.delete(placa).then(success => {
-            this.retorno.mensagem = "Item excluído";
-            this.retorno.titulo = "Sucesso";
-            this.retorno.tipo = "success";
-            this.novo();
+        this.db.delete(placa).then(response => {
+            this.mensagemSucesso(`${response.placa} excluído`);
+            this.veiculo = new Veiculo();
         }).catch(error => {
-            this.retorno.mensagem = error.status === 404 ? "Veículo não localizado" : "Erro desconhecido";
-            this.retorno.tipo = "danger";
-            this.retorno.titulo = "Erro";
+            this.mensagemErro(error.status === 404 ? "Veículo não localizado" : "Erro desconhecido")
         });
+    }
+    /**
+     * Validação do formulário
+     * 
+     * @returns {boolean} 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    validar(): boolean {
+        this.limparMensagem();
+        this.erros = [];
+        let mensagem = "é um campo obrigatório";
+        if (!this.veiculo.placa) {
+            this.erros.push(`Placa ${mensagem}`);
+        }
+        if (!this.veiculo.marca) {
+            this.erros.push(`Marca ${mensagem}`);
+        }
+        if (!this.veiculo.modelo) {
+            this.erros.push(`Modelo ${mensagem}`);
+        }
+        if (this.veiculo.imagem) {
+            if (!this.validarUrlImagem()) {
+                this.erros.push("O endereço da imagem não está no formato correto, deve ser uma URL válida");
+            }
+        }
+        return this.is_valid = this.erros.length === 0;
+    }
+    /**
+     * Verifica se o endereço da imagem está em um formato válido
+     * 
+     * @returns {boolean} 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    validarUrlImagem(): boolean {
+        return /^https?:\/\/(?:[a-z\-]+\.)+[a-z]{2,6}(?:\/[^\/#?]+)+\.(?:jpe?g|gif|png)$/g.test(this.veiculo.imagem);
+    }
+    /**
+     * Limpa as mensagens de erro caso existam
+     * 
+     * 
+     * @memberof VeiculosFormulario
+     */
+    limparMensagem() {
+        if (this.erros && this.erros.length > 0) {
+            this.erros.pop();
+        }
+        if (this.retorno && this.retorno.mensagem !== null) {
+            this.retorno.mensagem = null
+        }
     }
 }
