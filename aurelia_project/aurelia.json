@@ -38,6 +38,16 @@
         "displayName": "Karma",
         "source": "test/unit/**/*.ts"
     },
+    "e2eTestRunner": {
+        "id": "protractor",
+        "displayName": "Protractor",
+        "source": "test/e2e/src/**/*.ts",
+        "dist": "test/e2e/dist/",
+        "typingsSource": [
+            "typings/**/*.d.ts",
+            "custom_typings/**/*.d.ts"
+        ]
+    },
     "paths": {
         "root": "src",
         "resources": "resources",
@@ -89,7 +99,7 @@
                     "node_modules/aurelia-cli/lib/resources/scripts/configure-bluebird.js",
                     "node_modules/requirejs/require.js"
                 ],
-                "dependencies": [
+                "dependencies": [                    
                     "aurelia-binding",
                     "aurelia-bootstrapper",
                     "aurelia-dependency-injection",
@@ -132,7 +142,7 @@
                         "resources": [
                             "**/*.html"
                         ]
-                    },                    
+                    },
                     {
                         "name": "jquery-maskmoney",
                         "path": "../node_modules/jquery-maskmoney/src",
@@ -148,7 +158,7 @@
                         "name": "aurelia-templating-resources",
                         "path": "../node_modules/aurelia-templating-resources/dist/amd",
                         "main": "aurelia-templating-resources"
-                    },
+                    },                   
                     {
                         "name": "aurelia-templating-router",
                         "path": "../node_modules/aurelia-templating-router/dist/amd",

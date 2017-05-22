@@ -24,6 +24,6 @@ describe('Listagem de veículos', function () {
     });
 
     it("instancia a listagem", () => {    
-        expect(1).toBe(1);
+        expect(listagem).not.toBe(undefined);
     });
 });
