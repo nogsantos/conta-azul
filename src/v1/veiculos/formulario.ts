@@ -48,7 +48,7 @@ export class VeiculosFormulario {
         this.is_valid = true;
         this.combustiveis = [
             "Gasolina",
-            "Alcool",
+            "Álcool",
             "Flex"
         ];
         this.retorno = {
