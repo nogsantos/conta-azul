@@ -1,56 +1,95 @@
-import { browser, element, by, By, $, $$, ExpectedConditions } from 'aurelia-protractor-plugin/protractor';
+import { browser, element, by, By, $, $$, ExpectedConditions, protractor } from 'aurelia-protractor-plugin/protractor';
+/**
+ * Testa os elementos do formulário
+ * 
+ * @export
+ * @class FormularioSpec
+ */
+export class FormularioSpec {
+    private titulo_app: string;
+    private titulo_formulario_cadastro: string;
+    private titulo_formulario_edicao: string;
+    private placa: string;
+    private marca: string;
+    private modelo: string;
 
-export class PageObjectFormulario {
-
-    getCurrentPageTitle() {
-        return browser.getTitle();
-    }
-
-    setPlaca(value) {
-        let placa = element(by.id('_veiculo_placa'));
-        return placa.clear().then(() => placa.sendKeys(value));
-    }
-    getPlaca() {
-        return element(by.id('_veiculo_placa')).getAttribute('value');
-    }
-
-    setMarca(value) {
-        let marca = element(by.id('_veiculo_marca'));
-        return marca.clear().then(() => marca.sendKeys(value));
-    }
-    getMarca() {
-        return element(by.id('_veiculo_marca')).getAttribute('value');
-    }
-
-    setModelo(value) {
-        let modelo = element(by.id('_veiculo_modelo'));
-        return modelo.clear().then(() => modelo.sendKeys(value));
-    }
-    getModelo() {
-        return element(by.id('_veiculo_modelo')).getAttribute('value');
+    constructor() {
+        this.titulo_app = 'Teste Fabricio Nogueira';
+        this.titulo_formulario_cadastro = `Cadastro de veículos | ${this.titulo_app}`;
+        this.titulo_formulario_edicao = `Edição de veículos | ${this.titulo_app}`;
+        this.placa = "NVC-7029";
+        this.marca = "Chevrolet";
+        this.modelo = "Celta 1.0";
     }
 
-    getErroValidacao() {
-        return element(by.tagName('h5')).getText();
+    acessar() {
+        it('deve acessar o formulário de cadastro de veículos', () => {
+            element(by.partialButtonText('Novo')).click().then(() => {
+                browser.waitForRouterComplete();
+                browser.getTitle().then(current_title => {
+                    expect(current_title).toBe(this.titulo_formulario_cadastro);
+                }).catch(error => {
+                    console.log(error);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
     }
 
-    getMensagem() {
-        return element(by.tagName('strong')).getText();
+    cadastrar() {
+        it('deve cadastrar um veículo informando os campos obrigatórios', () => {
+            element(by.partialButtonText('Novo')).click().then(() => {
+                browser.waitForRouterComplete();
+                element(by.id('_veiculo_placa')).sendKeys(this.placa);
+                element(by.id('_veiculo_marca')).sendKeys(this.marca);
+                element(by.id('_veiculo_modelo')).sendKeys(this.modelo);
+                element(by.buttonText('Cadastrar')).click().then(ret => {
+                    expect(element(by.css('div strong')).getText()).toContain('Sucesso');
+                }).catch(error => {
+                    console.log(error);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
     }
 
-    btnCadastrar() {
-        element(by.id('btn_cadastrar')).click();        
+    testarDuplicidade() {
+        it('deve não permitir o cadastro de veículos em duplicidade', () => {
+            element(by.partialButtonText('Novo')).click().then(() => {
+                browser.waitForRouterComplete();
+                element(by.id('_veiculo_placa')).sendKeys(this.placa);
+                element(by.id('_veiculo_marca')).sendKeys(this.marca);
+                element(by.id('_veiculo_modelo')).sendKeys(this.modelo);
+                element(by.buttonText('Cadastrar')).click().then(ret => {
+                    expect(element(by.css('div strong')).getText()).toContain('Alerta');
+                }).catch(error => {
+                    console.log(error);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
     }
 
-    btnEditar() {
-        element(by.id('btn_editar')).click();        
+    testarCamposObrigatorios() {
+        it('deve não permitir cadastrar um veículo quando um ou mais campos obrigatórios estiverem vazios', () => {
+            element(by.partialButtonText('Novo')).click().then(() => {
+                browser.waitForRouterComplete();
+                element(by.id('_veiculo_placa')).sendKeys(this.placa);
+                element(by.id('_veiculo_marca')).clear();
+                element(by.id('_veiculo_modelo')).clear();
+                element(by.buttonText('Cadastrar')).click().then(ret => {
+                    let erros = element(by.repeater('error of erros'));
+                    expect(erros).not.toBe(null);
+                }).catch(error => {
+                    console.log(error);
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
     }
 
-    btnExcluir() {
-        element(by.id('btn_excluir')).click();        
-    }
-
-    btnCancelar() {
-        element(by.id('btn_cancelar')).click();        
-    }
 }

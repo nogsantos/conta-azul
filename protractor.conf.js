@@ -1,13 +1,13 @@
 exports.config = {
-    directConnect: true,
+    // directConnect: true,
 
     // Capabilities to be passed to the webdriver instance.
     capabilities: {
-        'browserName': 'chrome'
+        browserName: 'chrome'
     },
 
-    // seleniumAddress: 'http://localhost:4444',
-    specs: ['test/e2e/dist/**/*.js'],
+    specs: ['test/e2e/dist/*.js'],
+
     allScriptsTimeout: 20000,
 
     plugins: [{
