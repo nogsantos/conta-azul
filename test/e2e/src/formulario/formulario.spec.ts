@@ -15,36 +15,34 @@ describe('Formulário:', function () {
     });
 
     it('deve acessar o formulário para cadastro', () => {
+        browser.sleep(300);
         expect<any>(poFormulario.getCurrentPageTitle()).toBe(titulo_formulario_cadastro);
     });
 
     it('deve cadastrar um veículo informando os campos obrigatórios', () => {
         poFormulario.setPlaca('NVC-7029');
         poFormulario.setMarca('Chevrolet');
-        poFormulario.setModelo('Celta 1.0');
-        browser.sleep(200);
+        poFormulario.setModelo('Celta 1.0');        
         poFormulario.btnCadastrar();
-
-        expect<any>(poFormulario.getMensagem()).toBe('Sucesso');        
+        browser.sleep(300);
+        expect<any>(poFormulario.getMensagem()).toContain('Sucesso');        
     });
 
     it('deve não permitir o cadastro de veículos em duplicidade', () => {
         poFormulario.setPlaca('NVC-7029');
         poFormulario.setMarca('Chevrolet');
-        poFormulario.setModelo('Celta 1.0 preto');
-        browser.sleep(200);
+        poFormulario.setModelo('Celta 1.0 preto');        
         poFormulario.btnCadastrar();
-
-        expect<any>(poFormulario.getMensagem()).toBe('Alerta');
+        browser.sleep(300);
+        expect<any>(poFormulario.getMensagem()).toContain('Alerta');
     });
 
     it('não deve cadastrar um veículo quando não informado os campos obrigatórios', () => {
         poFormulario.setPlaca('');
         poFormulario.setMarca('');
-        poFormulario.setModelo('');
-        browser.sleep(200);
+        poFormulario.setModelo('');        
         poFormulario.btnCadastrar();
-
-        expect<any>(poFormulario.getErroValidacao()).toBe('Atenção');
+        browser.sleep(300);
+        expect<any>(poFormulario.getErroValidacao()).toContain('Atenção');
     });
 });

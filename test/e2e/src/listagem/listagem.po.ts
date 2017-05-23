@@ -7,8 +7,7 @@ export class PageObjectListagem {
     }
 
     acessarFormulario() {
-        element(by.id('btn_novo_carro')).click();
-        return browser.waitForRouterComplete();
+        element(by.id('btn_novo_carro')).click();        
     }
 
     carregarListagem() {        

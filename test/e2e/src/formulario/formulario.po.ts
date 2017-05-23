@@ -39,22 +39,18 @@ export class PageObjectFormulario {
     }
 
     btnCadastrar() {
-        element(by.id('btn_cadastrar')).click();
-        return browser.waitForRouterComplete();
+        element(by.id('btn_cadastrar')).click();        
     }
 
     btnEditar() {
-        element(by.id('btn_editar')).click();
-        return browser.waitForRouterComplete();
+        element(by.id('btn_editar')).click();        
     }
 
     btnExcluir() {
-        element(by.id('btn_excluir')).click();
-        return browser.waitForRouterComplete();
+        element(by.id('btn_excluir')).click();        
     }
 
     btnCancelar() {
-        element(by.id('btn_cancelar')).click();
-        return browser.waitForRouterComplete();
+        element(by.id('btn_cancelar')).click();        
     }
 }

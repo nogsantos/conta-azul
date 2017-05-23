@@ -6,7 +6,7 @@ exports.config = {
         'browserName': 'chrome'
     },
 
-    //seleniumAddress: 'http://0.0.0.0:4444',
+    // seleniumAddress: 'http://localhost:4444',
     specs: ['test/e2e/dist/**/*.js'],
     allScriptsTimeout: 20000,
 
@@ -18,7 +18,7 @@ exports.config = {
     jasmineNodeOpts: {
         showColors: true,
         defaultTimeoutInterval: 100000,
-        isVerbose: true,
-        includeStackTrace: true
+        isVerbose: false,
+        includeStackTrace: false
     }
 };

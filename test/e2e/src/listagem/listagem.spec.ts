@@ -24,14 +24,14 @@ describe('Listagem:', function() {
 
     it('deve acessar o formulário de cadastro de veículos', () => {
         poListagem.acessarFormulario();        
-        browser.sleep(200);
+        browser.sleep(300);
         expect<any>(poListagem.getCurrentPageTitle()).toBe(titulo_formulario_cadastro);
     });        
 
     it('deve realizar uma busca por um termo', () => {        
         poListagem.setTermoParaBusca(termo_para_busca);      
-        browser.sleep(200);  
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
+        browser.sleep(300);  
         expect<any>(poListagem.carregarListagem()).not.toBe(undefined);                
     });   
 
