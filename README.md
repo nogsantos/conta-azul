@@ -5,7 +5,7 @@
 ### Veja o vídeo
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=BRy-vcD33Bw
-" target="_blank"><img src="https://fabricionogueira.site/wp-content/uploads/2017/05/ca_listagem_imagem.png" 
+" target="_blank"><img src="https://res.cloudinary.com/nogsantos/image/upload/v1520423962/ca_listagem_dsqhzn.png" 
 alt="Sistema" /></a>
 
 **Objetivo:** ​Desenvolver mini aplicação para controle de frotas.
